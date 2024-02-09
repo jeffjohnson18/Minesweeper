@@ -1,0 +1,17 @@
+﻿@model MilestoneCST_350_Damien_.Models.UserModel
+
+@{
+    ViewData["Title"] = "Failure";
+}
+
+<h1>Failure</h1>
+
+<div>
+    <h4>Failed to Register</h4>
+
+    <partial> @Model.UserName please try again. </partial>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
