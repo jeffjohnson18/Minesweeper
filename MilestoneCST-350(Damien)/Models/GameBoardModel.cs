@@ -25,6 +25,11 @@
 				for (int k = 0; k < Size; k++)
 				{
 					Grid[i, k] = new CellModel();
+
+					Grid[i, k].RowNumber = i;
+					Grid[i, k].ColNumber = k;
+
+
 				}
 			}
 		}
