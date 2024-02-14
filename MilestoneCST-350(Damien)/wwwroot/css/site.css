@@ -20,3 +20,55 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*------------------------------------------------------------------------------
+    CSS for Button View
+------------------------------------------------------------------------------*/
+
+.game-button {
+    width: 80px;
+    height: 80px;
+}
+
+.game-button-image {
+    width: 70px;
+}
+
+.button-zone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.line-break {
+    /*
+        Sub property of the flexbox to specify the initial size of the flex size
+    */
+    flex-basis: 100%;
+    /* Specify the height of the element*/
+    height: 0;
+}
+
+.button-label {
+    font-family: 'Comic Sans MS';
+    font-size: 12px;
+    text-align: center;
+}
+
+/*------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+    CSS for Win/loss label
+------------------------------------------------------------------------------*/
+.win-loss-label {
+    justify-content: center;
+    font-family: 'Comic Sans MS';
+    font-size: 30px;
+    text-align: center;
+}
+
+/*------------------------------------------------------------------------------
+    CSS for Win/loss label
+------------------------------------------------------------------------------*/

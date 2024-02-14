@@ -1,5 +1,98 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+
 @{
+	//Main gameboard model
+	GameBoardModel gameBoard = Model;
+
+	// The grid or cell model inside of the main game board
+	CellModel[,] board = gameBoard.Grid;
+
+	// game board size
+	int boardSize = gameBoard.Size;
+
+	// amount of cell the user must unveil in order to win
+	int nonBombCellsCount = gameBoard.nonBombCells();
+
+	// 0 for empty cell
+	int emptyCell = 0;
+
+	// win/loss condition
+	bool winCondition = false;
+	bool loseCondition = false;
+
+
 }
+
+<form>
+	@*------------------------------------------------------------------------------------------------------------*@
+	@*                                            Minesweeper Game                                                *@
+	@*------------------------------------------------------------------------------------------------------------*@
+	<div class="button-zone">
+		@* create game board buttons *@
+		@for (int i = 0; i < boardSize; i++)
+		{
+			for (int k = 0; k < boardSize; k++)
+			{
+				// clicked cell (Send this back to HandleButtonClick method in minesweeper controller)
+				string clickedCell = i + ", " + k;
+
+				// button
+				<button class="game-button" type="submit" value="@clickedCell" name="clickedCell" asp-controller="Minesweeper" asp-action="HandleButtonClick">
+
+					@* If cell was clicked/visited *@
+					@if (board[i, k].Visited == true)
+					{
+						// check if live bomb
+						if (board[i, k].LiveBomb == true)
+						{
+							<img class="game-button-image" src="~/img/mine.png" />
+
+							loseCondition = true;
+						}
+						//check if cell has live neighbors
+						else if (board[i, k].LiveNeighbors > 0)
+						{
+							@board[i, k].LiveNeighbors
+						}
+						//check if cell is empty
+						else
+						{
+							@emptyCell
+
+						}
+					}
+					@* Everytime a button is clicked check is all non bomb cells are revealed*@
+					@if (gameBoard.IsAllNonBombCellsRevealed(nonBombCellsCount) == true)
+					{
+						winCondition = true;
+					}
+
+				</button>
+			}
+
+			<div class="line-break"> </div>
+		}
+	</div>
+	@*------------------------------------------------------------------------------------------------------------*@
+	@*                                          End of Minesweeper Game                                           *@
+	@*------------------------------------------------------------------------------------------------------------*@
+
+
+	@*------------------------------------------------------------------------------------------------------------*@
+	@*                                             Win/Loss Labels                                                *@
+	@*------------------------------------------------------------------------------------------------------------*@
+	@if(loseCondition == true)
+	{
+		<div class="win-loss-label"> You Lose</div>
+	}
+
+	@if (winCondition == true)
+	{
+		<div class="win-loss-label"> You Win</div>
+	}
+	@*------------------------------------------------------------------------------------------------------------*@
+	@*                                           End of Win/Loss Labels                                           *@
+	@*------------------------------------------------------------------------------------------------------------*@
+</form>
