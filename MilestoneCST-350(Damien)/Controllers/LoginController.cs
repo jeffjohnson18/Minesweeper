@@ -22,7 +22,7 @@ namespace MilestoneCST_350_Damien_.Controllers
 
                 // NOTE: Create view to minesweeper game page instead of Login Success
                 // Minesweeper Controller will take care of displaying the minesweeper game.
-                return View("LoginSuccess", user);
+                return RedirectToAction("Index", "Minesweeper");
             }
             else
             {

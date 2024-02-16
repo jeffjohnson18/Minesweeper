@@ -2,7 +2,42 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Minesweeper!</h1>
+
+        <section>
+            <h2>Before You Play</h2>
+            <p>Please make an account by clicking "Register" in the navigation bar.</p>
+            <p>Once you have made an account, log in by choosing "Play Minesweeper".</p>
+        </section>
+
+        <section>
+            <h2>Minesweeper Rules</h2>
+            <p>Minesweeper is a classic puzzle game where the objective is to clear a rectangular board containing hidden "mines" or bombs without detonating any of them.</p>
+            <ul>
+                <li><strong>Objective:</strong> Uncover all the squares on the board that do not contain mines.</li>
+                <li>
+                    <strong>Rules:</strong>
+                    <ul>
+                        <li>Clicking on a square will reveal what is underneath it.</li>
+                        <li>If a square contains a mine, the game ends.</li>
+                        <li>If a square does not contain a mine, it will display a number indicating how many adjacent squares contain mines.</li>
+                        <li>Use the numbers as clues to determine which squares are safe to click.</li>
+                        <li>Right-click or use another method to mark squares you suspect contain mines.</li>
+                        <li>The game is won when all non-mine squares are uncovered.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Remember to plan your moves carefully and use logic to solve the puzzle!</p>
+        </section>
+    </div>
+</body>
+</html>
