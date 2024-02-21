@@ -7,7 +7,7 @@ namespace MilestoneCST_350_Damien_.Controllers
 	{
 		public static int BoardSize = 8;
 
-		public static GameBoardModel board = new GameBoardModel(BoardSize);
+		public static GameBoardModel board;
 
 		// You can only manually change the difficulty of the game as of right now
 		private double BoardDifficulty = 0.06;
@@ -18,14 +18,15 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns></returns>
 		public IActionResult Index()
 		{
+			board = new GameBoardModel(BoardSize);
 			//set bombs up on board
-            board.SetUpBombs(BoardDifficulty);
+			board.SetUpBombs(BoardDifficulty);
 
 			// calcularte live neighbors on board
-            board.CalculateLiveNeighbors();
+			board.CalculateLiveNeighbors();
 
 			return View(board);
-        }
+		}
 
 
 		/// <summary>
@@ -41,7 +42,7 @@ namespace MilestoneCST_350_Damien_.Controllers
 
 			int col = Int32.Parse(parts[1]);
 
-			board.Grid[row,col].Visited = true;
+			board.Grid[row, col].Visited = true;
 
 			board.Fill(row, col);
 
