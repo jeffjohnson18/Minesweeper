@@ -1,0 +1,41 @@
+﻿@model MilestoneCST_350_Damien_.Models.DifficultyModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Choose Board Size and Difficulty</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ProcessDifficultySelection">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Difficulty" class="control-label">Difficulty</label>
+                <input asp-for="Difficulty" class="form-control" placeholder="Difficulty(0.01 - 0.10)" />
+                <span asp-validation-for="Difficulty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SizeOfBoard" class="control-label">Size Of Board</label>
+                <input asp-for="SizeOfBoard" class="form-control" placeholder="Size Of Board(5 - 16)" />
+                <span asp-validation-for="SizeOfBoard" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
