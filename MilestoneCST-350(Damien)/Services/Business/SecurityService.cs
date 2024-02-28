@@ -1,11 +1,12 @@
 ﻿using MilestoneCST_350_Damien_.Models;
+using MilestoneCST_350_Damien_.Services.DataAccess;
 
-namespace MilestoneCST_350_Damien_.Services
+namespace MilestoneCST_350_Damien_.Services.Business
 {
     public class SecurityService
     {
         // Create an object of the DAO Class so we can use the database lookup query
-        private SecurityDAO securityDAO = new SecurityDAO();
+        private LoginDAO loginDAO = new LoginDAO();
 
         /// <summary>
         /// Methods that calls DAO and returns the bool result
@@ -14,7 +15,7 @@ namespace MilestoneCST_350_Damien_.Services
         /// <returns>boolean</returns>
         public bool IsValid(UserModel user)
         {
-            return securityDAO.FindUserByNameAndPassword(user);
+            return loginDAO.FindUserByNameAndPassword(user);
         }
     }
 }

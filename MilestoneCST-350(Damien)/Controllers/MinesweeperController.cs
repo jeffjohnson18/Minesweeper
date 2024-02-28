@@ -1,31 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MilestoneCST_350_Damien_.Models;
+using MilestoneCST_350_Damien_.Services.Business;
 
 namespace MilestoneCST_350_Damien_.Controllers
 {
 	public class MinesweeperController : Controller
 	{
-		public static int BoardSize = 8;
+		public static GameBoardLogic? boardLogic = new GameBoardLogic();
 
-		public static GameBoardModel board;
+        public GameBoardService boardService = new GameBoardService();
 
-		// You can only manually change the difficulty of the game as of right now
-		private double BoardDifficulty = 0.06;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public IActionResult Index()
+        /// <summary>
+        /// Minesweeper game board page
+		/// Create Gameboard using the users selected board size and difficulty
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Index(DifficultyModel customDifficulty)
 		{
-			board = new GameBoardModel(BoardSize);
-			//set bombs up on board
-			board.SetUpBombs(BoardDifficulty);
+			GameBoardModel board = boardService.CreateGameBoard(customDifficulty);
 
-			// calcularte live neighbors on board
-			board.CalculateLiveNeighbors();
+			boardLogic = boardService.InitializeGameBoard(board);
 
-			return View(board);
+            return View(boardLogic);
 		}
 
 
@@ -36,18 +33,9 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns>GameBoardModel</returns>
 		public IActionResult HandleButtonClick(string clickedCell)
 		{
-			string[] parts = clickedCell.Split(',');
+			boardService.recursivelyFillBoard(clickedCell, boardLogic);
 
-			int row = Int32.Parse(parts[0]);
-
-			int col = Int32.Parse(parts[1]);
-
-			board.Grid[row, col].Visited = true;
-
-			board.Fill(row, col);
-
-
-			return View("Index", board);
+            return View("Index", boardLogic);
 		}
 
 

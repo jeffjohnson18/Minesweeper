@@ -1,9 +1,9 @@
 ﻿using MilestoneCST_350_Damien_.Models;
 using MySql.Data.MySqlClient;
 
-namespace MilestoneCST_350_Damien_.Services
+namespace MilestoneCST_350_Damien_.Services.DataAccess
 {
-    public class SecurityDAO
+    public class LoginDAO
     {
         private string ConnectionString = @"datasource=localhost;port=3306;username=root;password=root;database=minesweeper;";
 

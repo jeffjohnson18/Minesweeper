@@ -39,13 +39,13 @@ namespace MilestoneCST_350_Damien_.Models
 
 
 		[Required]
-		[DisplayName("Make a username: ")]
+		[DisplayName("Username")]
 		[StringLength(20, MinimumLength = 5)]
 		public string UserName { get; set; }
 
 
 		[Required]
-		[DisplayName("Make a secure password you won't forget: ")]
+		[DisplayName("Password")]
 		[StringLength(20, MinimumLength = 5)]
 		public string Password { get; set; }
 	}

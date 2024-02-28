@@ -1,16 +1,11 @@
-﻿@*
+﻿@using MilestoneCST_350_Damien_.Services.Business
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
 @{
-	//Main gameboard model
-	GameBoardModel gameBoard = Model;
-
-	// The grid or cell model inside of the main game board
-	CellModel[,] board = gameBoard.Grid;
-
-	// game board size
-	int boardSize = gameBoard.Size;
+	//Main gameboardLogic model
+	GameBoardLogic gameBoard = Model;
 
 	// amount of cell the user must unveil in order to win
 	int nonBombCellsCount = gameBoard.nonBombCells();
@@ -31,9 +26,9 @@
 	@*------------------------------------------------------------------------------------------------------------*@
 	<div class="button-zone">
 		@* create game board buttons *@
-		@for (int i = 0; i < boardSize; i++)
+		@for (int i = 0; i < gameBoard.Size; i++)
 		{
-			for (int k = 0; k < boardSize; k++)
+			for (int k = 0; k < gameBoard.Size; k++)
 			{
 				// clicked cell (Send this back to HandleButtonClick method in minesweeper controller)
 				string clickedCell = i + ", " + k;
@@ -42,19 +37,19 @@
 				<button class="game-button" type="submit" value="@clickedCell" name="clickedCell" asp-controller="Minesweeper" asp-action="HandleButtonClick">
 
 					@* If cell was clicked/visited *@
-					@if (board[i, k].Visited == true)
+					@if (gameBoard.Grid[i,k].Visited == true)
 					{
 						// check if live bomb
-						if (board[i, k].LiveBomb == true)
+						if (gameBoard.Grid[i, k].LiveBomb == true)
 						{
 							<img class="game-button-image" src="~/img/mine.png" />
 
 							loseCondition = true;
 						}
 						//check if cell has live neighbors
-						else if (board[i, k].LiveNeighbors > 0)
+						else if (gameBoard.Grid[i, k].LiveNeighbors > 0)
 						{
-							@board[i, k].LiveNeighbors
+							@gameBoard.Grid[i, k].LiveNeighbors
 						}
 						//check if cell is empty
 						else

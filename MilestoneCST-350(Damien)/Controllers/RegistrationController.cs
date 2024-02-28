@@ -1,16 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MilestoneCST_350_Damien_.Models;
-using MilestoneCST_350_Damien_.Services;
+using MilestoneCST_350_Damien_.Services.DataAccess;
 
 namespace MilestoneCST_350_Damien_.Controllers
 {
-	public class RegistrationController : Controller
+    public class RegistrationController : Controller
 	{
 		public IActionResult Index()
 		{
 			return View();
 		}
 
+		/// <summary>
+		/// Process the users registration info by adding it to the SQL database
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
 		[HttpPost]
 		public IActionResult ProcessRegistration(UserModel user)
 		{
