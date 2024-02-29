@@ -7,22 +7,21 @@ namespace MilestoneCST_350_Damien_.Services.DataAccess
     {
         private static string ConnectionString = @"datasource=localhost;port=3306;username=root;password=root;database=minesweeper;";
 
-        public static bool RegisterUser(UserModel user)
+        public bool RegisterUser(UserModel user)
         {
-
-
             // bool to store if post was successful
             bool success = false;
 
 
-            string sqlStatement = "INSERT INTO users (FirstName, LastName, Sex, Age, State, Email, UserName, Password) " +
-                      "VALUES (@FIRSTNAME, @LASTNAME, @SEX, @AGE, @STATE, @EMAILADDRESS, @USERNAME, @PASSWORD);";
+            string sqlStatement = "INSERT INTO users (id, firstname, lastname, sex, age, state, email, username, password) " +
+                      "VALUES (@ID, @FIRSTNAME, @LASTNAME, @SEX, @AGE, @STATE, @EMAILADDRESS, @USERNAME, @PASSWORD);";
 
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
                 // define the values of the two placeholders in the sqlStatement string
+                command.Parameters.Add("@ID", MySqlDbType.VarChar, 50).Value = user.Id;
                 command.Parameters.Add("@FIRSTNAME", MySqlDbType.VarChar, 50).Value = user.FirstName;
 
                 command.Parameters.Add("@LASTNAME", MySqlDbType.VarChar, 50).Value = user.LastName;
