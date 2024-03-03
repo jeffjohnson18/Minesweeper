@@ -1,4 +1,6 @@
-﻿using MilestoneCST_350_Damien_.Models;
+﻿using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using MilestoneCST_350_Damien_.Models;
+using System.Drawing;
 
 namespace MilestoneCST_350_Damien_.Services.Business
 {
@@ -23,16 +25,22 @@ namespace MilestoneCST_350_Damien_.Services.Business
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        public GameBoardLogic InitializeGameBoard(GameBoardModel board)
+        public GameBoardModel InitializeGameBoard(GameBoardModel board)
         {
-            GameBoardLogic initializedBoard = new GameBoardLogic(board);
+            GameBoardLogic logic = new GameBoardLogic(board);
             //set bombs up on board
-            initializedBoard.SetUpBombs();
+            logic.SetUpBombs();
 
             // calcularte live neighbors on board
-            initializedBoard.CalculateLiveNeighbors();
+            logic.CalculateLiveNeighbors();
 
-            return initializedBoard;
+            GameBoardModel newBoard = new GameBoardModel();
+
+            newBoard.Size = logic.Size;
+            newBoard.Grid = logic.Grid;
+            newBoard.Difficulty = logic.Difficulty;
+
+            return newBoard;
         }
 
         /// <summary>
@@ -40,7 +48,7 @@ namespace MilestoneCST_350_Damien_.Services.Business
         /// </summary>
         /// <param name="clickedCell"></param>
         /// <param name="boardLogic"></param>
-        public void recursivelyFillBoard(string clickedCell, GameBoardLogic boardLogic)
+        public GameBoardModel recursivelyFillBoard(string clickedCell, GameBoardModel board)
         {
             string[] parts = clickedCell.Split(',');
 
@@ -48,10 +56,45 @@ namespace MilestoneCST_350_Damien_.Services.Business
 
             int col = Int32.Parse(parts[1]);
 
-            boardLogic.Grid[row, col].Visited = true;
+            GameBoardLogic boardLogic = new GameBoardLogic(board);
 
-            boardLogic.Fill(row, col);
+            boardLogic.Grid[row, col].Visited = true;
+			boardLogic.Fill(row, col);
+
+
+			GameBoardModel newBoard = new GameBoardModel();
+
+			newBoard.Size = boardLogic.Size;
+			newBoard.Grid = boardLogic.Grid;
+			newBoard.Difficulty = boardLogic.Difficulty;
+
+			return board;
 
         }
-    }
+
+        /// <summary>
+        /// Gets the non bomb cells count
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public int getNonBombCellsCount(GameBoardModel board)
+        {
+			GameBoardLogic boardLogic = new GameBoardLogic(board);
+
+            return boardLogic.nonBombCells();
+		}
+
+        /// <summary>
+        /// Check is all non bomb cells are revealed
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="nonBombCells"></param>
+        /// <returns></returns>
+        public bool IsAllNonBombCellsRevealedService(GameBoardModel board, int nonBombCells)
+        {
+			GameBoardLogic boardLogic = new GameBoardLogic(board);
+
+			return boardLogic.IsAllNonBombCellsRevealed(nonBombCells);
+		}
+	}
 }
