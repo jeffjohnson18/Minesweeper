@@ -8,6 +8,9 @@ namespace MilestoneCST_350_Damien_.Services.Business
         public CellModel[,] Grid { get; set; }
         public double Difficulty { get; set; }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public GameBoardLogic()
         {
             Size = 0;

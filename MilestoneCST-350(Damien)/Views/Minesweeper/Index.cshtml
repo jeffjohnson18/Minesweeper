@@ -5,10 +5,12 @@
 
 @{
 	//Main gameboardLogic model
-	GameBoardLogic gameBoard = Model;
+	GameBoardModel gameBoard = Model;
+
+	GameBoardService service = new GameBoardService();
 
 	// amount of cell the user must unveil in order to win
-	int nonBombCellsCount = gameBoard.nonBombCells();
+	int nonBombCellsCount = service.getNonBombCellsCount(gameBoard);
 
 	// 0 for empty cell
 	int emptyCell = 0;
@@ -59,7 +61,7 @@
 						}
 					}
 					@* Everytime a button is clicked check is all non bomb cells are revealed*@
-					@if (gameBoard.IsAllNonBombCellsRevealed(nonBombCellsCount) == true)
+					@if (service.IsAllNonBombCellsRevealedService(gameBoard, nonBombCellsCount) == true)
 					{
 						winCondition = true;
 					}

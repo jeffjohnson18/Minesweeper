@@ -1,11 +1,20 @@
-﻿namespace MilestoneCST_350_Damien_.Models
+﻿using System.Drawing;
+
+namespace MilestoneCST_350_Damien_.Models
 {
 	public class GameBoardModel
 	{
 		// Gameboard Properties
 		public int Size { get; set; }
-		public CellModel[,] Grid { get; set; }
+		public CellModel[,]? Grid { get; set; }
 		public double Difficulty { get; set; }
+
+		public GameBoardModel()
+		{
+			Size = 0;
+			Grid = null;
+			Difficulty = 0;
+		}
 
 
 		/// <summary>

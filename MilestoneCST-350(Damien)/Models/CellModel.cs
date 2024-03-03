@@ -11,7 +11,6 @@
 
 		public int LiveNeighbors { get; set; }
 
-		// temporary
 
 		// Default cell constructor
 		public CellModel()

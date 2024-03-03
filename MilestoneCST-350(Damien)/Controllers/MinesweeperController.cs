@@ -6,8 +6,8 @@ namespace MilestoneCST_350_Damien_.Controllers
 {
 	public class MinesweeperController : Controller
 	{
-		public static GameBoardLogic? boardLogic = new GameBoardLogic();
-
+		// Class level Variables
+        public static GameBoardModel? board;
         public GameBoardService boardService = new GameBoardService();
 
 
@@ -18,11 +18,11 @@ namespace MilestoneCST_350_Damien_.Controllers
         /// <returns></returns>
         public IActionResult Index(DifficultyModel customDifficulty)
 		{
-			GameBoardModel board = boardService.CreateGameBoard(customDifficulty);
+			board = boardService.CreateGameBoard(customDifficulty);
 
-			boardLogic = boardService.InitializeGameBoard(board);
+			board = boardService.InitializeGameBoard(board);
 
-            return View(boardLogic);
+            return View(board);
 		}
 
 
@@ -33,9 +33,9 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns>GameBoardModel</returns>
 		public IActionResult HandleButtonClick(string clickedCell)
 		{
-			boardService.recursivelyFillBoard(clickedCell, boardLogic);
+			board = boardService.recursivelyFillBoard(clickedCell, board);
 
-            return View("Index", boardLogic);
+            return View("Index", board);
 		}
 
 
