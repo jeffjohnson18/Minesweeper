@@ -11,6 +11,7 @@ namespace MilestoneCST_350_Damien_.Controllers
         public GameBoardService boardService = new GameBoardService();
 
 
+
         /// <summary>
         /// Minesweeper game board page
 		/// Create Gameboard using the users selected board size and difficulty
@@ -22,20 +23,36 @@ namespace MilestoneCST_350_Damien_.Controllers
 
 			board = boardService.InitializeGameBoard(board);
 
-            return View(board);
+			// This only creates and initializes the board
+			return View(board);
 		}
 
 
 		/// <summary>
-		/// When a button is clicked mark it as visited and flood fill board
+		/// When a button is left clicked mark it as visited and flood fill board
 		/// </summary>
 		/// <param name="clickedCell"></param>
 		/// <returns>GameBoardModel</returns>
-		public IActionResult HandleButtonClick(string clickedCell)
+		public IActionResult LoadUpdatedBoard_WhenLeftClick(string clickedCell)
 		{
-			board = boardService.recursivelyFillBoard(clickedCell, board);
+			board = boardService.RecursivelyFillBoard(clickedCell, board);
 
-            return View("Index", board);
+			return PartialView("GameBoard", board);
+
+		}
+
+		/// <summary>
+		/// When a button is right clicked mark the cell as flagged to place a flag on the board
+		/// </summary>
+		/// <param name="clickedCell"></param>
+		/// <returns></returns>
+		public IActionResult LoadUpdatedBoard_WhenRightClick(string clickedCell)
+		{
+
+			board = boardService.PlaceFlag(clickedCell, board);
+
+			return PartialView("GameBoard", board);
+
 		}
 
 

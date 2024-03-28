@@ -1,0 +1,108 @@
+﻿@using MilestoneCST_350_Damien_.Services.Business
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+	//Main gameboardLogic model
+	GameBoardModel gameBoard = Model;
+
+	GameBoardService service = new GameBoardService();
+
+	// amount of cells the user must unveil in order to win
+	int nonBombCellsCount = service.GetNonBombCellsCount(gameBoard);
+
+	// 0 for empty cell
+	int emptyCell = 0;
+
+	// win/loss condition
+	bool winCondition = false;
+	bool loseCondition = false;
+
+
+}
+
+@*------------------------------------------------------------------------------------------------------------*@
+@*                                            Minesweeper Game                                                *@
+@*------------------------------------------------------------------------------------------------------------*@
+<div class="button-zone">
+	@* create game board buttons *@
+	@for (int i = 0; i < gameBoard.Size; i++)
+	{
+		for (int k = 0; k < gameBoard.Size; k++)
+		{
+			// clicked cell (Send this back to HandleButtonClick method in minesweeper controller)
+			string clickedCell = i + ", " + k;
+
+			// Partial view for each button Here???
+			// button
+			<button class="game-button" type="submit" value="@clickedCell" name="clickedCell" asp-controller="Minesweeper" asp-action="HandleButtonClick">
+				@if (gameBoard.Grid[i, k].CellFlagged == true)
+				{
+					<img class="game-button-image" src="~/img/flag.png" />
+				}
+
+
+				@* If cell was clicked/visited *@
+				@if (gameBoard.Grid[i, k].Visited == true)
+				{
+					// check if live bomb
+					if (gameBoard.Grid[i, k].LiveBomb == true)
+					{
+						<img class="game-button-image" src="~/img/mine.png" />
+
+						loseCondition = true; 
+
+					}
+					//check if cell has live neighbors
+					else if (gameBoard.Grid[i, k].LiveNeighbors > 0)
+					{
+						@gameBoard.Grid[i, k].LiveNeighbors
+					}
+					//check if cell is empty
+					else
+					{
+						@emptyCell
+
+					}
+				}
+				@* Everytime a button is clicked check if all non bomb cells are revealed*@
+				@if(loseCondition == false)
+				{
+					@if (service.IsAllNonBombCellsRevealedService(gameBoard, nonBombCellsCount) == true)
+					{
+						winCondition = true;
+					}
+				}
+				else
+				{
+					loseCondition = true;
+				}
+
+			</button>
+		}
+
+		<div class="line-break"> </div>
+	}
+</div>
+@*------------------------------------------------------------------------------------------------------------*@
+@*                                          End of Minesweeper Game                                           *@
+@*------------------------------------------------------------------------------------------------------------*@
+
+
+@*------------------------------------------------------------------------------------------------------------*@
+@*                                             Win/Loss Labels                                                *@
+@*------------------------------------------------------------------------------------------------------------*@
+@if (loseCondition == true)
+{
+	<div class="win-loss-label"> You Lose</div>
+}
+else if (loseCondition == false && winCondition == true)
+{
+	<div class="win-loss-label"> You Win</div>
+}
+
+@*------------------------------------------------------------------------------------------------------------*@
+@*                                           End of Win/Loss Labels                                           *@
+@*------------------------------------------------------------------------------------------------------------*@

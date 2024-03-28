@@ -19,7 +19,7 @@ namespace MilestoneCST_350_Damien_.Controllers
         [HttpPost]
         public IActionResult ProcessRegistration(UserModel user)
         {
-            RegistrationService registrationService = new RegistrationService();
+            SecurityService securityService = new SecurityService();
 
             if (user == null)
             {
@@ -27,11 +27,16 @@ namespace MilestoneCST_350_Damien_.Controllers
             }
             else
             {
-                registrationService.isValid(user);
+                securityService.RegisterUser(user);
                 return RedirectToAction("RegistrationResult", new { success = true });
             }
         }
 
+        /// <summary>
+        /// Registration result
+        /// </summary>
+        /// <param name="success"></param>
+        /// <returns></returns>
         public IActionResult RegistrationResult(bool success)
         {
             if (success)
