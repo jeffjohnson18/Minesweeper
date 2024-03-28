@@ -4,6 +4,7 @@ namespace MilestoneCST_350_Damien_.Services.Business
 {
     public class GameBoardLogic
     {
+        // class level
         public int Size { get; set; }
         public CellModel[,] Grid { get; set; }
         public double Difficulty { get; set; }
@@ -179,7 +180,7 @@ namespace MilestoneCST_350_Damien_.Services.Business
         /// counts all the cells on the board that is not a live bomb
         /// </summary>
         /// <returns></returns>
-        public int nonBombCells()
+        public int NonBombCells()
         {
             // non-bomb variable
             int nonBombCount = 0;
