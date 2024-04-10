@@ -1,11 +1,12 @@
-﻿using MilestoneCST_350_Damien_.Models;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MilestoneCST_350_Damien_.Models;
 using MySql.Data.MySqlClient;
 
 namespace MilestoneCST_350_Damien_.Services.Data
 {
 	public class UserData
 	{
-		// Class level
+		// Class Level Properties
 		private static string ConnectionString = @"datasource=localhost;port=3306;username=root;password=root;database=minesweeper;";
 
 
@@ -16,11 +17,12 @@ namespace MilestoneCST_350_Damien_.Services.Data
 		/// </summary>
 		/// <param name="user"></param>
 		/// <returns>bool</returns>
-		public bool FindUserByNameAndPassword(UserModel user)
+		public int FindUserByNameAndPassword(UserModel user)
 		{
-			//Assume nothing is found
-			// Declare and initialize our flag as false
-			bool isSuccessful = false;
+
+			//bool isSuccessful = false;
+			int userId = -1;
+
 
 			// Query string to query db for password and username
 			string sqlStatement = "SELECT * FROM users WHERE UserName = @userName AND Password = @password";
@@ -48,11 +50,10 @@ namespace MilestoneCST_350_Damien_.Services.Data
 
 					MySqlDataReader reader = command.ExecuteReader();
 
-					// Let's see if there are any rows found
-					if (reader.HasRows)
+					while (reader.Read())
 					{
-						// update the flag so we can return that our user was found
-						isSuccessful = true;
+						// Get the current user's id
+						userId = (int)reader[0];
 					}
 				}
 				catch (Exception ex)
@@ -60,8 +61,8 @@ namespace MilestoneCST_350_Damien_.Services.Data
 					Console.WriteLine(ex.Message);
 				}
 			}
-			// Retunr the result
-			return isSuccessful;
+			// Return the userId
+			return userId;
 		}
 
 		/// <summary>

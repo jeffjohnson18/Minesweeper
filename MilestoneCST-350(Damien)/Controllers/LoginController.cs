@@ -25,13 +25,14 @@ namespace MilestoneCST_350_Damien_.Controllers
             // Instantiate the SecurityServices class
             SecurityService securityService = new SecurityService();
 
-            // User the object to call the method IsValid
-            if (securityService.IsValid(user) == true)
-            {
+            // Check if user is valid
+            int userId = securityService.IsValid(user);
 
-                // NOTE: Create view to minesweeper game page instead of Login Success
-                // Minesweeper Controller will take care of displaying the minesweeper game.
-                return RedirectToAction("Index", "Difficulty");
+			// User the object to call the method IsValid
+			if (userId != -1)
+            {
+                // Redirect to Difficulty controller and also send the current logged in user's id
+                return RedirectToAction("Index", "Difficulty", new { userId = userId });
             }
             else
             {

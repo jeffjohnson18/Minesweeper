@@ -1,4 +1,4 @@
-﻿@using MilestoneCST_350_Damien_.Services.Business
+﻿ @using MilestoneCST_350_Damien_.Services.Business
 
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,11 +21,24 @@
 	bool loseCondition = false;
 
 
+
 }
 
 @*------------------------------------------------------------------------------------------------------------*@
 @*                                            Minesweeper Game                                                *@
 @*------------------------------------------------------------------------------------------------------------*@
+
+@* Save A Game button *@
+<button class="btn btn-secondary" >
+	@Html.ActionLink("Save Game", "ProcessSaveAGame", "Minesweeper", null, new { @class = "Save-Game-Link" , onclick = "return confirm('The game has been saved and you will return back to the Home page.')" })
+</button>
+
+@* Show Saved Games button *@
+<button class="btn btn-secondary">
+	@Html.ActionLink("Show Saved Games", "ProcessDisplaySavedGames", "Minesweeper")
+</button>
+
+
 <div class="button-zone">
 	@* create game board buttons *@
 	@for (int i = 0; i < gameBoard.Size; i++)
@@ -37,7 +50,7 @@
 
 			// Partial view for each button Here???
 			// button
-			<button class="game-button" type="submit" value="@clickedCell" name="clickedCell" asp-controller="Minesweeper" asp-action="HandleButtonClick">
+			<button class="game-button" type="submit" value="@clickedCell" name="clickedCell">
 				@if (gameBoard.Grid[i, k].CellFlagged == true)
 				{
 					<img class="game-button-image" src="~/img/flag.png" />

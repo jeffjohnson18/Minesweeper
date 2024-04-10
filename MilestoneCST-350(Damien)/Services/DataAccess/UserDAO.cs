@@ -11,11 +11,11 @@ namespace MilestoneCST_350_Damien_.Services.DataAccess
 
 		/// <summary>
 		/// Finds user by username and password
-		/// Returns true if match is found
+		/// Returns the user's id
 		/// </summary>
 		/// <param name="user"></param>
 		/// <returns>bool</returns>
-		public bool FindUserByNameAndPassword(UserModel user)
+		public int FindUserByNameAndPassword(UserModel user)
 		{
 
 			return userData.FindUserByNameAndPassword(user);

@@ -9,18 +9,18 @@ namespace MilestoneCST_350_Damien_.Services.Business
         private UserDAO userDAO = new UserDAO();
 
         /// <summary>
-        /// Methods that calls DAO and returns the bool result
+        /// Check's if the user is valid based on the username and password.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>boolean</returns>
-        public bool IsValid(UserModel user)
+        public int IsValid(UserModel user)
         {
             return userDAO.FindUserByNameAndPassword(user);
         }
 
 
 		/// <summary>
-		/// envokes the register user method
+		/// Envokes the register user method
 		/// </summary>
 		/// <param name="user"></param>
 		/// <returns> returns true if user was able to successfully register </returns>

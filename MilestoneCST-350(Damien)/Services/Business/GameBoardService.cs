@@ -44,7 +44,7 @@ namespace MilestoneCST_350_Damien_.Services.Business
         }
 
         /// <summary>
-        /// Revursively fill the board based on where the user clicked.
+        /// Recursively fill the board based on where the user clicked.
         /// </summary>
         /// <param name="clickedCell"></param>
         /// <param name="boardLogic"></param>
