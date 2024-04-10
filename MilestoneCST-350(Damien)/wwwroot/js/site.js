@@ -40,6 +40,8 @@ $(function () {
         console.log("Right click...Prevent context menu..")
     });
 
+    // when a cell is left clicked recursivley fill the board and get that updated board to do a partial page
+    // update for only the game board.
     function handleLeftClick(clickedCell)
     {
         $.ajax({

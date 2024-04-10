@@ -8,13 +8,12 @@
 	GameBoardModel gameBoard = Model;
 
 
-
 }
 
 <form>
 	<p>Current Time: @DateTime.Now</p>
-	<div id="game-board">
-		@Html.Partial("GameBoard", gameBoard)
-	</div>
 
+	<div id="game-board">
+		@Html.Partial("GameBoard", gameBoard )
+	</div>
 </form>
