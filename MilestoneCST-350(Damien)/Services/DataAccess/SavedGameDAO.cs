@@ -46,8 +46,37 @@ namespace MilestoneCST_350_Damien_.Services.DataAccess
 		/// <returns></returns>
 		public GameBoardModel GetOneGame(int id)
 		{
-            return savedGameData.GetOneGame(id);
+			return savedGameData.GetOneGame(id);
+		}
 
-        }
-    }
+		/// <summary>
+		/// gets all saved games, regardless of user id
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns></returns>
+		public List<SavedGameAPIModel> GetAllGamesAPI()
+		{
+			return savedGameData.GetAllGamesAPI();
+		}
+
+		/// <summary>
+		/// Deletes a saved game from th SQL database
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public int DeleteGameByGameIDAPI(int id)
+		{
+			return savedGameData.DeleteGameByGameIDAPI(id);
+		}
+
+		/// <summary>
+		/// Selects a saved game from th SQL database by id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public List<SavedGameAPIModel> GetGameByIDAPI(int id)
+		{
+			return savedGameData.GetGameByIDAPI(id);
+		}
+	}
 }
