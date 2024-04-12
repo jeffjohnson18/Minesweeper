@@ -1,210 +1,332 @@
-﻿using Microsoft.AspNetCore.Components.QuickGrid;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using MilestoneCST_350_Damien_.Models;
+﻿using MilestoneCST_350_Damien_.Models;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
-using System.Text.Json;
 
 namespace MilestoneCST_350_Damien_.Services.Data
 {
-    public class SavedGameData
-    {
-        // Class Level Variables
-        private static string ConnectionString = @"datasource=localhost;port=3306;username=root;password=root;database=minesweeper;";
+	public class SavedGameData
+	{
+		// Class Level Variables
+		private static string ConnectionString = @"datasource=localhost;port=3306;username=root;password=root;database=minesweeper;";
 
-        /// <summary>
-        /// This method saves a game to the SQL Database
-        /// </summary>
-        /// <param name="savedGame"></param>
-        /// <returns></returns>
-        public bool SaveOneGame(SavedGameModel savedGame)
-        {
-            // Declare and initialize our flag as false
-            bool isSuccessful = false;
+		/// <summary>
+		/// This method saves a game to the SQL Database
+		/// </summary>
+		/// <param name="savedGame"></param>
+		/// <returns></returns>
+		public bool SaveOneGame(SavedGameModel savedGame)
+		{
+			// Declare and initialize our flag as false
+			bool isSuccessful = false;
 
-            // Get the userId, the time the game was saved, and the board to be saved 
-            int userId = savedGame.UserId;
-            string timeSaved = savedGame.TimeSaved;
-            var jsonGame = JsonConvert.SerializeObject(savedGame.GameBoard);
-
-
-            // Query string to query db for inserting a saved game
-            string sqlStatement = "INSERT INTO savedgames (UserId, TimeSaved, Game) VALUES (@userId, @timeSaved, @game)";
-
-            // using statement to ensure objects are disposed of correctly.
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            {
-                MySqlCommand command = new MySqlCommand(sqlStatement, connection);
-
-                command.Parameters.Add("@userId", MySqlDbType.Int32, 3).Value = userId;
-                command.Parameters.Add("@timeSaved", MySqlDbType.VarChar, 40).Value = timeSaved;
-                command.Parameters.Add("@game", MySqlDbType.LongText).Value = jsonGame;
-
-                // Use try catch when opening a db just in case ther is an exception
-                try
-                {
-                    // User the connection object
-                    connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
-
-                    if (rowsAffected > 0)
-                    {
-                        isSuccessful = true;
-                        Console.WriteLine("RowsAffected: {0}", rowsAffected);
-                    }
-                    else
-                    {
-                        Console.WriteLine("No rows affected. Check the data or table structure.");
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            // Return the result
-            return isSuccessful;
-        }
-
-        /// <summary>
-        /// This method gets a saved game from the SQL database
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public GameBoardModel GetOneGame(int id)
-        {
-            // Declare FoundSavedBoard as a dataype GameBoardModel
-            GameBoardModel FoundSavedBoard = null;
-
-            // JSON string of the game board (empty for now)
-            string jsonStringGame = "";
+			// Get the userId, the time the game was saved, and the board to be saved 
+			int userId = savedGame.UserId;
+			string timeSaved = savedGame.TimeSaved;
+			var jsonGame = JsonConvert.SerializeObject(savedGame.GameBoard);
 
 
-            // Query string to get the saved game based on the id argument
-            string sqlStatement = "SELECT * FROM savedgames WHERE Id = @Id";
+			// Query string to query db for inserting a saved game
+			string sqlStatement = "INSERT INTO savedgames (UserId, TimeSaved, Game) VALUES (@userId, @timeSaved, @game)";
 
-            // Use using so all connections get closed when done
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            {
-                MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+			// using statement to ensure objects are disposed of correctly.
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
-                // Fill in the placeholder for the query string 
-                command.Parameters.AddWithValue("@Id", id);
+				command.Parameters.Add("@userId", MySqlDbType.Int32, 3).Value = userId;
+				command.Parameters.Add("@timeSaved", MySqlDbType.VarChar, 40).Value = timeSaved;
+				command.Parameters.Add("@game", MySqlDbType.LongText).Value = jsonGame;
 
-                try
-                {
-                    connection.Open();
+				// Use try catch when opening a db just in case ther is an exception
+				try
+				{
+					// User the connection object
+					connection.Open();
+					int rowsAffected = command.ExecuteNonQuery();
 
-                    // Open up the reader. ExecuteReader returns object that can be iterated over to read entire results set.
-                    MySqlDataReader reader = command.ExecuteReader();
+					if (rowsAffected > 0)
+					{
+						isSuccessful = true;
+						Console.WriteLine("RowsAffected: {0}", rowsAffected);
+					}
+					else
+					{
+						Console.WriteLine("No rows affected. Check the data or table structure.");
+					}
 
-                    //Then read the results of the query (Only have one result)
-                    if (reader.Read())
-                    {
-                        jsonStringGame = (string)reader[3];
-                    }
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+			}
+			// Return the result
+			return isSuccessful;
+		}
 
-                    // Deserialize the JSON string game board back into a GameBoardModel
-                    FoundSavedBoard = JsonConvert.DeserializeObject<GameBoardModel>(jsonStringGame);
-                }
-                catch (Exception exp)
-                {
-                    Console.WriteLine(exp.Message);
-                };
-            }
+		/// <summary>
+		/// This method gets a saved game from the SQL database
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public GameBoardModel GetOneGame(int id)
+		{
+			// Declare FoundSavedBoard as a dataype GameBoardModel
+			GameBoardModel FoundSavedBoard = null;
 
-            // return the found saved game
-            return FoundSavedBoard;
-        }
-
-
-        /// <summary>
-        /// Delete's a game from the SQL Database
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public int DeleteOneGame(int id)
-        {
-            // Declare and Initialize rowsAffected
-            int rowsAffected = -1;
-
-            // SQL Query to delete a saved game from the database
-            string deleteStatement = "DELETE FROM savedgames WHERE Id = @Id";
-
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            {
-                //Nested using statements allows for proper management of multiple resource, ensuring that eaach resource
-                // is disposed of correctly.
-                using (MySqlCommand command = new MySqlCommand(deleteStatement, connection))
-                {
-                    // Fill in the placeholder for the query string 
-                    command.Parameters.AddWithValue("@Id", id);
-
-                    try
-                    {
-                        connection.Open();
-                        
-                        // Execute non query (Delete Query above)
-                        rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine("Rows affected: " + rowsAffected);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error deleting record: " + ex.Message);
-                        rowsAffected = 0;
-                    }
-                }
-            }
-            // return the amount of rows affected
-            return rowsAffected;
-        }
-
-        /// <summary>
-        /// This method gets all of the save games for the current user form the SQL database
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public List<SavedGameModel> GetAllGames(int userId)
-        {
-            // Declare and initialize a list of saved games
-            List<SavedGameModel> listOfSavedGames = new List<SavedGameModel>();
-
-            // Query string to query db for all of the saved games based on the userId
-            string sqlStatement = "SELECT * FROM savedgames  WHERE UserId = @userid";
+			// JSON string of the game board (empty for now)
+			string jsonStringGame = "";
 
 
-            // using statement to ensure objects are disposed of correctly.
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            {
-                MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+			// Query string to get the saved game based on the id argument
+			string sqlStatement = "SELECT * FROM savedgames WHERE Id = @Id";
 
-                command.Parameters.Add("@userid", MySqlDbType.Int32, 40).Value = userId;
+			// Use using so all connections get closed when done
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
-                // Use try catch when opening a db just in case ther is an exception
-                try
-                {
-                    // User the connection object
-                    connection.Open();
+				// Fill in the placeholder for the query string 
+				command.Parameters.AddWithValue("@Id", id);
 
-                    //Execute the query and read the results
-                    MySqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        // get the saved game board JSON string and deserialize back into a GameBoardModel
-                        var savedGame = JsonConvert.DeserializeObject<GameBoardModel>((string)reader[3]);
+				try
+				{
+					connection.Open();
 
-                        // add the saved game to the list of saved games
-                        listOfSavedGames.Add(new SavedGameModel((int)reader[0], (int)reader[1], (string)reader[2], savedGame));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            // Return the the list of saved games for that user.
-            return listOfSavedGames;
-        }
-    }
+					// Open up the reader. ExecuteReader returns object that can be iterated over to read entire results set.
+					MySqlDataReader reader = command.ExecuteReader();
+
+					//Then read the results of the query (Only have one result)
+					if (reader.Read())
+					{
+						jsonStringGame = (string)reader[3];
+					}
+
+					// Deserialize the JSON string game board back into a GameBoardModel
+					FoundSavedBoard = JsonConvert.DeserializeObject<GameBoardModel>(jsonStringGame);
+				}
+				catch (Exception exp)
+				{
+					Console.WriteLine(exp.Message);
+				};
+			}
+
+			// return the found saved game
+			return FoundSavedBoard;
+		}
+
+
+		/// <summary>
+		/// Delete's a game from the SQL Database
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public int DeleteOneGame(int id)
+		{
+			// Declare and Initialize rowsAffected
+			int rowsAffected = -1;
+
+			// SQL Query to delete a saved game from the database
+			string deleteStatement = "DELETE FROM savedgames WHERE Id = @Id";
+
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				//Nested using statements allows for proper management of multiple resource, ensuring that eaach resource
+				// is disposed of correctly.
+				using (MySqlCommand command = new MySqlCommand(deleteStatement, connection))
+				{
+					// Fill in the placeholder for the query string 
+					command.Parameters.AddWithValue("@Id", id);
+
+					try
+					{
+						connection.Open();
+
+						// Execute non query (Delete Query above)
+						rowsAffected = command.ExecuteNonQuery();
+						Console.WriteLine("Rows affected: " + rowsAffected);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("Error deleting record: " + ex.Message);
+						rowsAffected = 0;
+					}
+				}
+			}
+			// return the amount of rows affected
+			return rowsAffected;
+		}
+
+		/// <summary>
+		/// This method gets all of the save games for the current user form the SQL database
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns></returns>
+		public List<SavedGameModel> GetAllGames(int userId)
+		{
+			// Declare and initialize a list of saved games
+			List<SavedGameModel> listOfSavedGames = new List<SavedGameModel>();
+
+			// Query string to query db for all of the saved games based on the userId
+			string sqlStatement = "SELECT * FROM savedgames  WHERE UserId = @userid";
+
+
+			// using statement to ensure objects are disposed of correctly.
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+
+				command.Parameters.Add("@userid", MySqlDbType.Int32, 40).Value = userId;
+
+				// Use try catch when opening a db just in case ther is an exception
+				try
+				{
+					// User the connection object
+					connection.Open();
+
+					//Execute the query and read the results
+					MySqlDataReader reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						// get the saved game board JSON string and deserialize back into a GameBoardModel
+						var savedGame = JsonConvert.DeserializeObject<GameBoardModel>((string)reader[3]);
+
+						// add the saved game to the list of saved games
+						listOfSavedGames.Add(new SavedGameModel((int)reader[0], (int)reader[1], (string)reader[2], savedGame));
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+			}
+			// Return the the list of saved games for that user.
+			return listOfSavedGames;
+		}
+
+		/// <summary>
+		/// New method to get all games, regardless of user id, for api
+		/// Mostly the same, just different query and no command parameters
+		/// </summary>
+		/// <returns></returns>
+		public List<SavedGameAPIModel> GetAllGamesAPI()
+		{
+			// Declare and initialize a list of saved games
+			List<SavedGameAPIModel> listOfSavedGames = new List<SavedGameAPIModel>();
+
+			// Query string to get all savedgames
+			string sqlStatement = "SELECT * FROM savedgames";
+
+
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+
+				try
+				{
+					connection.Open();
+
+					MySqlDataReader reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						// Add the saved game to the list of saved games
+						listOfSavedGames.Add(new SavedGameAPIModel((int)reader[0], (int)reader[1], (string)reader[2], (string)reader[3]));
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+			}
+			// Return the list of saved games
+			return listOfSavedGames;
+		}
+
+		/// <summary>
+		/// Delete a Game by Game ID
+		/// </summary>
+		/// <returns></returns>
+		public int DeleteGameByGameIDAPI(int id)
+		{
+			// Placeholder for rowsAffected
+			int rowsAffected = -1;
+
+			// Declare and initialize a list of saved games
+			List<SavedGameAPIModel> listOfSavedGames = new List<SavedGameAPIModel>();
+
+			// Query string to get all savedgames
+			string deleteStatement = "DELETE FROM savedgames where id = @Id";
+
+
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(deleteStatement, connection);
+
+				// Pass in the game Id
+				command.Parameters.AddWithValue("@Id", id);
+
+				try
+				{
+					connection.Open();
+
+					MySqlDataReader reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						// Execute Query and print rows affected
+						rowsAffected = command.ExecuteNonQuery();
+						Console.WriteLine("Rows Affected: " + rowsAffected);
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+			}
+			// Return the list of saved games
+			return rowsAffected;
+		}
+
+		/// <summary>
+		/// <summary>
+		/// New method to get all games, regardless of user id, for api
+		/// Mostly the same, just different query and no command parameters
+		/// </summary>
+		/// <returns></returns>
+		public List<SavedGameAPIModel> GetGameByIDAPI(int id)
+		{
+			// Declare and initialize a list of saved games
+			List<SavedGameAPIModel> listOfSavedGames = new List<SavedGameAPIModel>();
+
+			// Query string to get all savedgames
+			string sqlStatement = "SELECT * FROM savedgames WHERE id = @id";
+
+
+			using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+			{
+				MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+				command.Parameters.AddWithValue("@id", id);
+
+				try
+				{
+					connection.Open();
+
+					MySqlDataReader reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						// Add the saved game to the list of saved games
+						listOfSavedGames.Add(new SavedGameAPIModel((int)reader[0], (int)reader[1], (string)reader[2], (string)reader[3]));
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+			}
+			// Return the list of saved games
+			return listOfSavedGames;
+		}
+
+
+
+	}
 }
