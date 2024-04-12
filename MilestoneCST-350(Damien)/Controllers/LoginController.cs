@@ -23,6 +23,8 @@ namespace MilestoneCST_350_Damien_.Controllers
 			_context = context;
 		}
 
+
+
 		/// <summary>
 		/// Authenticate the users login info
 		/// </summary>
@@ -39,8 +41,8 @@ namespace MilestoneCST_350_Damien_.Controllers
 			// User the object to call the method IsValid
 			if (userId != -1)
 			{
-				// verify the state 
-				_context.HttpContext.Session.SetString("UserName", user.UserName);
+				// store the user id in session
+				HttpContext.Session.SetInt32("UserId", userId);
 
 				// Redirect to Difficulty controller and also send the current logged in user's id
 				return RedirectToAction("Index", "Difficulty", new { userId = userId });
