@@ -6,7 +6,22 @@ namespace MilestoneCST_350_Damien_.Controllers
 {
 	public class LoginController : Controller
 	{
+		// Use dependecy injection
+		// IHttpContextAccessor interface allows us to access the session
+		// Create an object named "_context"
+		// prefix convention "_" denotes private fields with a class
 		private readonly IHttpContextAccessor _context;
+
+
+		/// <summary>
+		/// Constructor of the Login Controller
+		/// </summary>
+		/// <param name="context"></param>
+		public LoginController(IHttpContextAccessor context)
+		{
+			_context = context;
+		}
+
 		/// <summary>
 		/// Login Page
 		/// </summary>
@@ -16,14 +31,6 @@ namespace MilestoneCST_350_Damien_.Controllers
 		{
 			return View();
 		}
-
-		// Constructor to inject dependency variable (context)
-		public LoginController(IHttpContextAccessor context)
-		{
-			_context = context;
-		}
-
-
 
 		/// <summary>
 		/// Authenticate the users login info
@@ -41,8 +48,9 @@ namespace MilestoneCST_350_Damien_.Controllers
 			// User the object to call the method IsValid
 			if (userId != -1)
 			{
-				// store the user id in session
-				HttpContext.Session.SetInt32("UserId", userId);
+				// Define the key value pair to store in the
+				// session object
+				_context.HttpContext.Session.SetInt32("UserId", userId);
 
 				// Redirect to Difficulty controller and also send the current logged in user's id
 				return RedirectToAction("Index", "Difficulty", new { userId = userId });
