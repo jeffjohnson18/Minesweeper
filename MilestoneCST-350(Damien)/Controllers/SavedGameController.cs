@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MilestoneCST_350_Damien_.Models;
 using MilestoneCST_350_Damien_.Services.Business;
 using Newtonsoft.Json;
-using NuGet.Protocol.Core.Types;
-using Org.BouncyCastle.Bcpg;
 
 namespace MilestoneCST_350_Damien_.Controllers
 {
@@ -21,8 +18,20 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns></returns>
 		public IActionResult Index()
 		{
-            // Get the current UserId from the Minesweeper controller (Method: ProcessDisplaySavedGames())
-            userId = (int)TempData["UserId"];
+			// gather the current userid from session
+			int? stateUserId = HttpContext.Session.GetInt32("UserId");
+
+			// check if state is empty
+			// if empty, return to home page
+			// if valid, pass test and redirect to minesweeper page
+			if (stateUserId == 0)
+			{
+				// redirect to home page
+				return RedirectToAction("Index", "Login");
+			}
+
+			// Get the current UserId from the Minesweeper controller (Method: ProcessDisplaySavedGames())
+			userId = (int)TempData["UserId"];
 
 			// Get all of the current users saved games
 			savedGamesList = savedGameService.GetAllGames(userId);
@@ -37,8 +46,8 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns></returns>
 		public IActionResult SaveAGame()
 		{
-            // Get the saved game from the Minesweeper controller (Method: ProcessSaveAGame())
-            string savedGameJson = TempData["SavedGameJson"] as string;
+			// Get the saved game from the Minesweeper controller (Method: ProcessSaveAGame())
+			string savedGameJson = TempData["SavedGameJson"] as string;
 			SavedGameModel savedGame = JsonConvert.DeserializeObject<SavedGameModel>(savedGameJson);
 
 			// save the game to the SQL database
@@ -54,34 +63,34 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// </summary>
 		/// <param name="Id"></param>
 		/// <returns></returns>
-        public ActionResult DeleteSavedGame(int Id)
-        {
+		public ActionResult DeleteSavedGame(int Id)
+		{
 			// Delete a selected saved game
 			savedGameService.DeleteOneGame(Id);
 
 			// Get the updated list of games and display it
-            return View("Index", savedGameService.GetAllGames(userId));
-        }
+			return View("Index", savedGameService.GetAllGames(userId));
+		}
 
 		/// <summary>
 		/// Resume a previous game that was saved
 		/// </summary>
 		/// <param name="Id"></param>
 		/// <returns></returns>
-        public ActionResult ResumeSavedGame(int Id)
-        {
+		public ActionResult ResumeSavedGame(int Id)
+		{
 			// get the saved game the user wants to resume
-            GameBoardModel resumeBoard = savedGameService.GetOneGame(Id);
+			GameBoardModel resumeBoard = savedGameService.GetOneGame(Id);
 
 			// Send the game the user wants to resume back to the minesweeper controller
 			// The minesweeper controller will handle resuming a saved game
-            string serializedBoard = JsonConvert.SerializeObject(resumeBoard);
-            TempData["ResumeGame"] = serializedBoard;
+			string serializedBoard = JsonConvert.SerializeObject(resumeBoard);
+			TempData["ResumeGame"] = serializedBoard;
 
 			// Redirect back to the Minesweeper controller
-            return RedirectToAction("Index", "Minesweeper");
+			return RedirectToAction("Index", "Minesweeper");
 
-        }
+		}
 
-    }
+	}
 }
