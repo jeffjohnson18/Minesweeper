@@ -11,6 +11,16 @@ namespace MilestoneCST_350_Damien_.Controllers
 		private SavedGameService savedGameService = new SavedGameService();
 		private static List<SavedGameModel> savedGamesList;
 		private static int userId;
+		private readonly IHttpContextAccessor _context;
+
+		/// <summary>
+		/// Constructor of the SavedGameController
+		/// </summary>
+		/// <param name="context"></param>
+		public SavedGameController(IHttpContextAccessor context)
+		{
+			_context = context;
+		}
 
 		/// <summary>
 		/// Display all of the saved games for the current user.
@@ -18,13 +28,13 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns></returns>
 		public IActionResult Index()
 		{
-			// gather the current userid from session
-			int? stateUserId = HttpContext.Session.GetInt32("UserId");
+			// gather the current userid from session variable
+			int? stateUserId = _context.HttpContext.Session.GetInt32("UserId");
 
 			// check if state is empty
-			// if empty, return to home page
-			// if valid, pass test and redirect to minesweeper page
-			if (stateUserId == 0)
+			// if null or less than or equal to 0, return to home page
+			// if valid, pass test and redirect to savedGame page
+			if (stateUserId <= 0 || stateUserId == null)
 			{
 				// redirect to home page
 				return RedirectToAction("Index", "Login");

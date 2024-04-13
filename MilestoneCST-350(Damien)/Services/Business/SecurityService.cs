@@ -1,4 +1,5 @@
-﻿using MilestoneCST_350_Damien_.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using MilestoneCST_350_Damien_.Models;
 using MilestoneCST_350_Damien_.Services.DataAccess;
 
 namespace MilestoneCST_350_Damien_.Services.Business
@@ -28,5 +29,6 @@ namespace MilestoneCST_350_Damien_.Services.Business
 		{
 			return userDAO.RegisterUser(user);
 		}
+
 	}
 }

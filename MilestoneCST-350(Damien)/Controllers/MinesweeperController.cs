@@ -11,6 +11,13 @@ namespace MilestoneCST_350_Damien_.Controllers
 		public static GameBoardModel? board;
 		public GameBoardService boardService = new GameBoardService();
 		private static int currentUserId = 0;
+		private readonly IHttpContextAccessor _context;
+
+	
+		public MinesweeperController(IHttpContextAccessor context)
+		{
+			_context = context;
+		}
 
 
 		/// <summary>
@@ -21,13 +28,13 @@ namespace MilestoneCST_350_Damien_.Controllers
 		/// <returns></returns>
 		public IActionResult Index(DifficultyModel customDifficulty)
 		{
-			// gather the current userid from session
-			int? stateUserId = HttpContext.Session.GetInt32("UserId");
+			// gather the current userid from session variable
+			int? stateUserId = _context.HttpContext.Session.GetInt32("UserId");
 
 			// check if state is empty
-			// if empty, return to home page
+			// if null or less than or equal to 0, return to home page
 			// if valid, pass test and redirect to minesweeper page
-			if (stateUserId == 0)
+			if (stateUserId <= 0 || stateUserId == null)
 			{
 				// redirect to home page
 				return RedirectToAction("Index", "Login");
